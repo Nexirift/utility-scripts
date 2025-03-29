@@ -14,7 +14,9 @@ if [ -f "$NPM_RC_PATH" ]; then
     echo ".npmrc updated to nexirift.com."
   fi
 else
-  echo ".npmrc not found."
+  echo "Creating .npmrc file..."
+  echo "@nexirift:registry = \"$NEXIRIFT_URL\"" > "$NPM_RC_PATH"
+  echo ".npmrc created with nexirift.com registry."
 fi
 
 # Update bunfig.toml
@@ -28,5 +30,8 @@ if [ -f "$BUNFIG_TOML_PATH" ]; then
     echo "bunfig.toml updated to nexirift.com."
   fi
 else
-  echo "bunfig.toml not found."
+  echo "Creating bunfig.toml file..."
+  echo "[install.scopes]" > "$BUNFIG_TOML_PATH"
+  echo "\"@nexirift\" = { url = \"$NEXIRIFT_URL\" }" >> "$BUNFIG_TOML_PATH"
+  echo "bunfig.toml created with nexirift.com registry."
 fi
