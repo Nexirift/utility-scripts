@@ -34,15 +34,6 @@ if [ "$(docker ps -q -a -f name=$DB_CONTAINER_NAME)" ]; then
   exit 0
 fi
 
-# Import env variables from .env
-if [ ! -f ".env" ]; then
-  echo -e "${RED}Error: .env file not found in current directory.${RESET}"
-  exit 1
-fi
-
-set -a
-source .env
-
 # Check if DATABASE_URL is defined
 if [ -z "${DATABASE_URL:-}" ]; then
   echo -e "${RED}Error: DATABASE_URL is not defined in .env file.${RESET}"
