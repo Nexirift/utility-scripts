@@ -63,7 +63,6 @@ if ! docker image inspect postgres-wal2json &>/dev/null; then
 else
   POSTGRES_IMAGE="postgres-wal2json"
 fi
-
 echo "Starting PostgreSQL container..."
 if docker run -d \
   --name $DB_CONTAINER_NAME \
@@ -73,9 +72,17 @@ if docker run -d \
   -p "$DB_PORT":5432 \
   $POSTGRES_IMAGE; then
   echo -e "${GREEN}Database container '$DB_CONTAINER_NAME' was successfully created${RESET}"
+
+  # Wait for the database to be ready to accept connections
+  echo "Waiting for PostgreSQL to be ready..."
+  sleep 3
+
+  # Create the citext extension
+  echo "Creating citext extension..."
+  docker exec -it $DB_CONTAINER_NAME psql -U postgres -d nexirift -c "CREATE EXTENSION IF NOT EXISTS citext;"
+
+  echo -e "${GREEN}PostgreSQL is now running on port $DB_PORT with citext extension enabled${RESET}"
 else
   echo -e "${RED}Failed to start database container. Check docker logs for more information.${RESET}"
   exit 1
 fi
-
-echo -e "${GREEN}PostgreSQL is now running on port $DB_PORT${RESET}"
